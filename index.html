@@ -3,9 +3,38 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>College Services Hub</title>
+<!-- Primary Meta Tags -->
+<title>College Services Hub — Skills, Projects, Internships & Career Support</title>
+<meta name="title" content="College Services Hub — Skills, Projects, Internships & Career Support">
+<meta name="description" content="Get portfolio websites, resume building, project help, internships, placement support & career guidance — everything a student needs to grow. Skill up. Rise up.">
+<meta name="keywords" content="portfolio, resume, internships, placement, project help, students services, coding help, career guidance, college services, ATS resume, mini project, internship finder">
+<meta name="author" content="College Services Hub">
+
+<!-- Open Graph / Facebook -->
+<meta property="og:type" content="website">
+<meta property="og:title" content="College Services Hub — Skills, Services & Success">
+<meta property="og:description" content="A one-stop platform for students: Portfolio websites, project assistance, resume building, internships & placement guidance.">
+<meta property="og:image" content="https://image2url.com/images/1764764687937-4bc676d6-de9b-4872-a1b7-3072b0e67977.jpg">
+<meta property="og:url" content="https://collegeserviceshub.netlify.app/">
+<meta property="og:site_name" content="College Services Hub">
+
+<!-- Twitter / X -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="College Services Hub — Skills, Services & Success">
+<meta name="twitter:description" content="Get professional portfolio websites, project help, internships, and career guidance for students.">
+<meta name="twitter:image" content="https://image2url.com/images/1764764687937-4bc676d6-de9b-4872-a1b7-3072b0e67977.jpg">
+
+<!-- Extra Ranking Boost -->
+<meta name="robots" content="index, follow">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="theme-color" content="#4F46E5">
+
+
 <script src="https://cdn.tailwindcss.com"></script>
 <style>
+  *{
+    overflow-x: hidden;
+  }
 .card-shadow{box-shadow:0 6px 18px rgba(0,0,0,0.08);}
 .theme-light { --bg-color:#f8fafc; --text-color:#1e293b; --card-bg:#ffffff; }
 .theme-dark { --bg-color:#1e293b; --text-color:#a1a1a1; --card-bg:#334155; }
@@ -22,23 +51,33 @@ button { transition: all 0.2s; }
 }
 .mainWel{
   padding-top: 3vmax;
-  font-size: 2vw;
+  font-size: 2vmax;
   font-weight: 600;
   color: #3e6cce ;
 }
 .secondMainwel{
   padding: 1vmax;
-  font-size: 1.2vw;
+  font-size: 1.2vmax;
   color: #a5a6a6 ;
   font-family: Georgia, 'Times New Roman', Times, serif;
 }
 footer{
+  font-size: 1vmax;
   color: #a5a6a6;
   background-color: #0a101c;
 }
 footer div{
   text-align: center;
-  padding: 2.5vmax;
+  padding: 2vmax;
+  padding-bottom: 1vmax;
+}
+.themecolor{
+  position: absolute;
+ padding-top: 5px;
+  left: 90vw;
+}
+span{
+  cursor: not-allowed;
 }
 </style>
 </head>
@@ -53,15 +92,18 @@ footer div{
     </div>
   </div>
   <div class="flex gap-2 items-center">
-    <button id="themeLight" class="px-2 py-1 rounded bg-gray-200 text-gray-800 text-sm" title="Light Theme">☀</button>
-    <button id="themeDark" class="px-2 py-1 rounded bg-gray-800 text-white text-sm" title="Dark Theme">🌙</button>
-    <button id="themeBlue" class="px-2 py-1 rounded bg-blue-600 text-white text-sm" title="Coding Theme">💻</button>
-    <button id="openAdmin" class="px-3 py-2 rounded bg-green-600 text-white text-sm hidden">Add Service</button>
+  <button id="openAdmin" class="px-3 py-2 rounded bg-green-600 text-white text-sm hidden">Add Service</button>
     <button id="viewRequests" class="px-3 py-2 rounded bg-orange-600 text-white text-sm hidden">View Requests</button>
-    <button id="premiumBtn" class="px-3 py-2 rounded bg-indigo-600 text-white text-sm">Premium</button>
+
   </div>
 </div>
 </header>
+<div class="themecolor">
+    <button id="themeLight" class="px-2 py-1 rounded bg-gray-200 text-gray-800 text-sm" title="Light Theme">☀</button>
+    <button id="themeDark" class="px-2 py-1 rounded bg-gray-800 text-white text-sm" title="Dark Theme">🌙</button>
+    <button id="themeBlue" class="px-2 py-1 rounded bg-blue-600 text-white text-sm" title="Coding Theme">💻</button>
+    
+</div>
 <div class="welcome">
   <div class="mainWel">Welcome to the Digital Hub Where Skills, Services & Success Come Together.</div>
   <div class="secondMainwel">Learn, build and grow with powerful digital services — from portfolios to internships, guidance to opportunities.</div>
@@ -119,7 +161,9 @@ footer div{
   </div>
 </div>
 <footer>
-  <div>© 2025 College Services Hub — Trusted by Students, Powered by Mentors.
+  <div>
+    <div>© 2025 College Services Hub — Trusted by Students, Powered by Mentors.</div>
+     <div> <span id="premiumBtn" class="px-3 py-2 rounded bg-indigo-600 text-white text-sm">System Config</span></div>
 </div>
 </footer>
 <script>
@@ -179,8 +223,8 @@ function renderGrid(){
 }
 
 function askAdminPassword(){
-  const p=prompt("Enter Premium Access Password:"); if(!p) return;
-  if(btoa(p)===encodedPass){adminMode=true; alert("Premium Activated"); showAdminOptions(); renderRequests(); }
+  const p=prompt("Enter System Config Access Password:"); if(!p) return;
+  if(btoa(p)===encodedPass){adminMode=true; alert("System Config Activated"); showAdminOptions(); renderRequests(); }
   else alert("Wrong Password");
 }
 
