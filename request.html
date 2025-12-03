@@ -88,7 +88,7 @@ document.addEventListener('DOMContentLoaded', ()=>{
     document.getElementById("successPage").classList.remove("hidden");
 
     // Contact icons dynamic — replace with your contact details
-    const MY_EMAIL = "your@email.com";
+    const MY_EMAIL = "faindno.1@gmail.com";
     const MY_WHATSAPP = "91XXXXXXXXXX"; // with country code
     document.getElementById("emailBtn").href = `mailto:${MY_EMAIL}?subject=Service Request: ${encodeURIComponent(req.service)}&body=${encodeURIComponent('Name: '+req.name+'%0AEmail: '+req.email+'%0APhone: '+req.phone+'%0ADetails: '+req.details)}`;
     document.getElementById("waBtn").href = `https://wa.me/${MY_WHATSAPP.replace(/\D/g,'')}?text=${encodeURIComponent('Hello, I submitted a request for: '+req.service+' (Name: '+req.name+')')}`;
@@ -100,3 +100,4 @@ document.addEventListener('DOMContentLoaded', ()=>{
 </script>
 </body>
 </html>
+
