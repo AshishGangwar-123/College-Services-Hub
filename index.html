@@ -1,0 +1,325 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>College Services Hub</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<style>
+.card-shadow{box-shadow:0 6px 18px rgba(0,0,0,0.08);}
+.theme-light { --bg-color:#f8fafc; --text-color:#1e293b; --card-bg:#ffffff; }
+.theme-dark { --bg-color:#1e293b; --text-color:#a1a1a1; --card-bg:#334155; }
+.theme-blue { --bg-color:#0f172a; --text-color:#a1a1a1; --card-bg:#1e293b; --code-font:'Fira Code', monospace; }
+body { background-color: var(--bg-color); color: var(--text-color); font-family: var(--code-font, sans-serif); transition: all 0.3s; }
+.bg-card { background-color: var(--card-bg); }
+.tag { background-color:#e2e8f0; color:#1e293b; font-size:11px; padding:2px 6px; border-radius:4px; }
+.theme-dark .tag { background-color:#475569; color:#f8fafc; }
+.theme-blue .tag { background-color:#334155; color:#cbd5e1; }
+button { transition: all 0.2s; }
+.welcome{
+  text-align:center ;
+   padding: 3vmax;
+}
+.mainWel{
+  padding-top: 3vmax;
+  font-size: 2vw;
+  font-weight: 600;
+  color: #3e6cce ;
+}
+.secondMainwel{
+  padding: 1vmax;
+  font-size: 1.2vw;
+  color: #a5a6a6 ;
+  font-family: Georgia, 'Times New Roman', Times, serif;
+}
+footer{
+  color: #a5a6a6;
+  background-color: #0a101c;
+}
+footer div{
+  text-align: center;
+  padding: 2.5vmax;
+}
+</style>
+</head>
+<body class="min-h-screen">
+<header class="bg-white shadow-sm sticky top-0 z-40">
+<div class="max-w-6xl mx-auto px-4 py-4 flex items-center justify-between">
+  <div class="flex items-center gap-3">
+    <div class="w-10 h-10 bg-indigo-600 text-white flex items-center justify-center rounded">CS</div>
+    <div>
+      <h1 class="text-lg font-semibold">College Services Hub</h1>
+      <p class="text-xs text-slate-500">Placement counselling, mini projects, resumes, internships & more</p>
+    </div>
+  </div>
+  <div class="flex gap-2 items-center">
+    <button id="themeLight" class="px-2 py-1 rounded bg-gray-200 text-gray-800 text-sm" title="Light Theme">☀</button>
+    <button id="themeDark" class="px-2 py-1 rounded bg-gray-800 text-white text-sm" title="Dark Theme">🌙</button>
+    <button id="themeBlue" class="px-2 py-1 rounded bg-blue-600 text-white text-sm" title="Coding Theme">💻</button>
+    <button id="openAdmin" class="px-3 py-2 rounded bg-green-600 text-white text-sm hidden">Add Service</button>
+    <button id="viewRequests" class="px-3 py-2 rounded bg-orange-600 text-white text-sm hidden">View Requests</button>
+    <button id="premiumBtn" class="px-3 py-2 rounded bg-indigo-600 text-white text-sm">Premium</button>
+  </div>
+</div>
+</header>
+<div class="welcome">
+  <div class="mainWel">Welcome to the Digital Hub Where Skills, Services & Success Come Together.</div>
+  <div class="secondMainwel">Learn, build and grow with powerful digital services — from portfolios to internships, guidance to opportunities.</div>
+</div>
+<main class="max-w-6xl mx-auto px-4 py-8">
+  <section id="homeView">
+    <div class="mb-6 flex items-center justify-between">
+      <h2 class="text-2xl font-semibold">Available Services</h2>
+    </div>
+    <div id="servicesGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+  </section>
+  <section id="serviceView" class="hidden"><div id="serviceContent"></div></section>
+
+  <!-- Requests Panel (admin only) -->
+  <div id="requestsPanel" class="hidden max-w-4xl mx-auto mt-8 bg-card p-6 rounded-xl card-shadow">
+    <div class="flex items-center justify-between mb-4">
+      <h2 class="text-xl font-semibold">User Requests</h2>
+      <div class="text-sm text-slate-400">Manage form submissions</div>
+    </div>
+    <div id="requestsList" class="space-y-3 text-sm"></div>
+  </div>
+</main>
+
+<!-- Admin modal -->
+<div id="adminModal" class="fixed inset-0 bg-black/40 hidden items-center justify-center p-4">
+  <div class="bg-card rounded-2xl max-w-2xl w-full p-6 card-shadow">
+    <div class="flex items-center justify-between mb-4">
+      <h3 class="text-lg font-semibold">Add / Edit Service</h3>
+      <button id="closeAdmin" class="text-slate-500">✕</button>
+    </div>
+    <form id="serviceForm" class="space-y-3">
+      <input type="hidden" id="serviceId" />
+      <div>
+        <label class="text-sm">Service Name</label>
+        <input id="serviceName" required class="w-full mt-1 p-2 border rounded" placeholder="e.g. Resume Making" />
+      </div>
+      <div>
+        <label class="text-sm">Short Description</label>
+        <input id="serviceShort" required class="w-full mt-1 p-2 border rounded" placeholder="one-line summary" />
+      </div>
+      <div>
+        <label class="text-sm">Detailed Description / Instructions (Markdown ok)</label>
+        <textarea id="serviceDesc" rows="6" class="w-full mt-1 p-2 border rounded" placeholder="Describe what the service includes, delivery time, price etc."></textarea>
+      </div>
+      <div class="flex gap-2">
+        <input id="servicePrice" type="text" class="p-2 border rounded w-36" placeholder="Price (optional)" />
+        <input id="serviceTags" class="p-2 border rounded flex-1" placeholder="Tags (comma separated)" />
+      </div>
+      <div class="flex justify-end gap-2">
+        <button type="button" id="clearForm" class="px-4 py-2 rounded bg-slate-100">Clear</button>
+        <button type="submit" class="px-4 py-2 rounded bg-indigo-600 text-white">Save Service</button>
+      </div>
+    </form>
+    <div class="mt-4 text-xs text-slate-500">Tip: Use the export button to download the JSON of all services.</div>
+  </div>
+</div>
+<footer>
+  <div>© 2025 College Services Hub — Trusted by Students, Powered by Mentors.
+</div>
+</footer>
+<script>
+let adminMode=false;
+const encodedPass="QXNoQDEyMw=="; // same as before (p)
+const STORAGE_KEY='college_services_v1';
+const REQ_KEY='service_requests_v1';
+let services=[];
+const el=id=>document.getElementById(id);
+
+const saveToStorage=()=>localStorage.setItem(STORAGE_KEY,JSON.stringify(services));
+const loadFromStorage=()=>JSON.parse(localStorage.getItem(STORAGE_KEY)||"[]");
+
+function genId(){return 's_'+Math.random().toString(36).slice(2,9);}
+function escapeHtml(str=''){ return String(str).replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;'); }
+
+function ensureSeed(){
+  services=loadFromStorage();
+  if(services.length===0){
+    services=[
+      {id:genId(),name:'Placement Counselling',short:'Personalized guidance for campus placements',desc:'Resume review, mock interviews, strategy & training.',price:'Free / Paid',tags:['placement','counselling']},
+      {id:genId(),name:'Mini Project Help',short:'Ideas + Submission ready code',desc:'Project ideas, diagrams, code and full documentation.',price:'Depends',tags:['project','code']},
+      {id:genId(),name:'Resume Making',short:'Professional ATS-friendly resume',desc:'Resume + LinkedIn redesign, PDF export.',price:'₹199',tags:['resume','cv']},
+      {id:genId(),name:'Portfolio Website',short:'Modern & stylish portfolio website to showcase skills & projects',desc:'Responsive portfolio with contact links, projects, certificates.',price:'₹499',tags:['portfolio','web']},
+      {id:genId(),name:'Internship Finder',short:'Paid & unpaid internships across fields for students & freshers',desc:'Curated internship listings and application help.',price:'Free/Paid',tags:['internship','opportunity']}
+    ];
+    saveToStorage();
+  }
+}
+
+function renderGrid(){
+  const grid=el('servicesGrid'); grid.innerHTML='';
+  services.forEach(s=>{
+    const card=document.createElement('div'); card.className='bg-card p-4 rounded-lg card-shadow';
+    card.innerHTML=`
+      <div class="flex justify-between items-start">
+        <div>
+          <h3 class="text-lg font-semibold">${escapeHtml(s.name)}</h3>
+          <p class="text-sm text-slate-400 mt-1">${escapeHtml(s.short)}</p>
+        </div>
+        <div class="text-right">
+          <div class="text-slate-400 text-xs mb-2">${escapeHtml(s.price)}</div>
+          <button data-id="${s.id}" class="openService text-indigo-600 text-xs">Open</button>
+          <button data-id="${s.id}" class="editService text-slate-600 text-xs hidden">Edit</button>
+          <button data-id="${s.id}" class="deleteService text-rose-600 text-xs hidden">Delete</button>
+        </div>
+      </div>
+      <div class="mt-3 flex gap-2 flex-wrap">
+        ${(s.tags||[]).map(t=>`<span class="tag">${escapeHtml(t)}</span>`).join('')}
+      </div>`;
+    grid.appendChild(card);
+  });
+  document.querySelectorAll('.openService').forEach(btn=>btn.addEventListener('click',e=>openService(e.target.dataset.id)));
+  document.querySelectorAll('.editService').forEach(btn=>btn.addEventListener('click',e=>editService(e.target.dataset.id)));
+  document.querySelectorAll('.deleteService').forEach(btn=>btn.addEventListener('click',e=>deleteService(e.target.dataset.id)));
+  if(adminMode) showAdminOptions();
+}
+
+function askAdminPassword(){
+  const p=prompt("Enter Premium Access Password:"); if(!p) return;
+  if(btoa(p)===encodedPass){adminMode=true; alert("Premium Activated"); showAdminOptions(); renderRequests(); }
+  else alert("Wrong Password");
+}
+
+function showAdminOptions(){
+  document.querySelectorAll(".editService, .deleteService").forEach(el=>el.classList.remove("hidden"));
+  el("openAdmin")?.classList.remove("hidden");
+  el("viewRequests")?.classList.remove("hidden");
+  el("requestsPanel")?.classList.add("hidden"); // hidden by default until viewed
+}
+
+function openService(id){ location.hash="#service/"+id; }
+function showServiceView(id){
+  const s=services.find(x=>x.id===id); if(!s) return location.hash='';
+  el('homeView').classList.add('hidden'); el('serviceView').classList.remove('hidden');
+  el('serviceContent').innerHTML=`
+    <div class="bg-card p-6 rounded-lg">
+      <button id="backBtn" class="text-indigo-600 font-bold mb-4 block">← Back</button>
+      <h2 class="text-2xl font-bold">${escapeHtml(s.name)}</h2>
+      <p class="mt-2 text-slate-400">${escapeHtml(s.short)}</p>
+      <div class="mt-3 text-slate-400">${(s.desc||'').replaceAll('\n','<br>')}</div>
+      <div class="mt-6 flex gap-3">
+        <a href="request.html?service=${encodeURIComponent(s.name)}" class="px-4 py-2 rounded bg-indigo-600 text-white">Request Service</a>
+        <button id="editFromView" class="px-4 py-2 rounded bg-slate-100 hidden">Edit</button>
+      </div>
+    </div>`;
+  el("backBtn").onclick=()=>location.hash='';
+  if(adminMode){el("editFromView").classList.remove("hidden"); el("editFromView").onclick=()=>editService(s.id);}
+}
+
+function openAdminModal(){ clearForm(); el('adminModal').classList.remove('hidden'); }
+function closeAdminModal(){ el('adminModal').classList.add('hidden'); }
+function clearForm(){ ['serviceId','serviceName','serviceShort','serviceDesc','servicePrice','serviceTags'].forEach(id=>el(id).value=''); }
+
+function editService(id){
+  if(!adminMode) return alert("Unauthorized Access");
+  const s=services.find(x=>x.id===id);
+  el('serviceId').value=s.id; el('serviceName').value=s.name; el('serviceShort').value=s.short;
+  el('serviceDesc').value=s.desc; el('servicePrice').value=s.price; el('serviceTags').value=(s.tags||[]).join(',');
+  openAdminModal();
+}
+
+function deleteService(id){
+  if(!adminMode) return alert("Unauthorized Access");
+  if(!confirm("Delete this service?")) return;
+  services=services.filter(x=>x.id!==id); saveToStorage(); renderGrid();
+  if(location.hash==="#service/"+id) location.hash='';
+}
+
+/* Requests: load, render, delete */
+function loadRequests(){ return JSON.parse(localStorage.getItem(REQ_KEY) || "[]"); }
+
+function renderRequests(){
+  const listEl = el('requestsList');
+  const items = loadRequests();
+  listEl.innerHTML = "";
+
+  if(items.length === 0){
+    listEl.innerHTML = `<p class="text-slate-400">No requests yet.</p>`;
+    return;
+  }
+
+  items.forEach((r, i) => {
+    const card = document.createElement("div");
+    card.className = "p-4 rounded bg-slate-100 theme-dark:bg-slate-700";
+    // Replace with your email & whatsapp when using
+    const CONTACT_EMAIL = "your@email.com";
+    const WHATSAPP_NUMBER = "91XXXXXXXXXX"; // include country code
+    card.innerHTML = `
+      <div class="flex justify-between items-start">
+        <div>
+          <div class="text-sm"><b>${escapeHtml(r.name)}</b> — <span class="text-xs text-slate-500">${escapeHtml(r.date)}</span></div>
+          <div class="mt-1 text-slate-600"><b>Service:</b> ${escapeHtml(r.service)}</div>
+          <div class="mt-1 text-slate-600"><b>Phone:</b> ${escapeHtml(r.phone)}</div>
+          <div class="mt-1 text-slate-600"><b>Email:</b> ${escapeHtml(r.email)}</div>
+          <div class="mt-2 text-slate-600"><b>Details:</b> ${escapeHtml(r.details||'-')}</div>
+        </div>
+        <div class="flex flex-col gap-2">
+          <a href="mailto:${r.email}" class="px-2 py-1 text-xs bg-green-600 text-white rounded">Email</a>
+          <a href="https://wa.me/${WHATSAPP_NUMBER.replace(/\D/g,'')}?text=${encodeURIComponent('Hello, regarding: '+r.service)}" target="_blank" class="px-2 py-1 text-xs bg-green-500 text-white rounded">WhatsApp</a>
+          <button class="px-2 py-1 text-xs bg-rose-600 text-white rounded delReq" data-index="${i}">Delete</button>
+        </div>
+      </div>`;
+    listEl.appendChild(card);
+  });
+
+  document.querySelectorAll(".delReq").forEach(btn =>
+    btn.addEventListener("click", e => {
+      const idx = Number(e.target.dataset.index);
+      const arr = loadRequests();
+      arr.splice(idx,1);
+      localStorage.setItem(REQ_KEY, JSON.stringify(arr));
+      renderRequests();
+    })
+  );
+}
+
+/* Theme buttons */
+const body=document.body;
+el('themeLight').addEventListener('click',()=>{ body.classList.remove('theme-dark','theme-blue'); body.classList.add('theme-light'); localStorage.setItem('theme','light'); });
+el('themeDark').addEventListener('click',()=>{ body.classList.remove('theme-light','theme-blue'); body.classList.add('theme-dark'); localStorage.setItem('theme','dark'); });
+el('themeBlue').addEventListener('click',()=>{ body.classList.remove('theme-light','theme-dark'); body.classList.add('theme-blue'); localStorage.setItem('theme','blue'); });
+const savedTheme=localStorage.getItem('theme'); if(savedTheme) body.classList.add('theme-'+savedTheme); else body.classList.add('theme-light');
+
+document.addEventListener("DOMContentLoaded",()=>{
+  ensureSeed(); renderGrid();
+const q = new URLSearchParams(window.location.search);
+  const service = q.get("service");
+  document.getElementById("serviceName").value = service;
+
+  if (document.getElementById("selectedService")) {
+    document.getElementById("selectedService").innerText = service;
+  }
+  function handleHash(){ if(location.hash.startsWith("#service/")) showServiceView(location.hash.split("/")[1]);
+    else { el('serviceView').classList.add('hidden'); el('homeView').classList.remove('hidden'); } }
+  window.addEventListener('hashchange',handleHash); handleHash();
+
+  el('premiumBtn').addEventListener('click',askAdminPassword);
+  el('openAdmin').addEventListener('click',openAdminModal);
+  el('closeAdmin')?.addEventListener('click',closeAdminModal);
+
+  el('serviceForm').addEventListener('submit',ev=>{
+    ev.preventDefault();
+    const id=el('serviceId').value||genId();
+    const obj={ id, name:el('serviceName').value.trim(), short:el('serviceShort').value.trim(), desc:el('serviceDesc').value.trim(), price:el('servicePrice').value.trim(), tags:el('serviceTags').value.split(',').map(t=>t.trim()).filter(Boolean) };
+    const exist=services.find(x=>x.id===id); exist ? Object.assign(exist,obj) : services.unshift(obj);
+    saveToStorage(); renderGrid(); closeAdminModal();
+  });
+
+  // viewRequests toggle
+  el('viewRequests').addEventListener('click', ()=>{
+    el('requestsPanel').classList.toggle('hidden');
+    renderRequests();
+    // scroll into view
+    if(!el('requestsPanel').classList.contains('hidden')) el('requestsPanel').scrollIntoView({behavior:'smooth'});
+  });
+
+  // Clear form
+  el('clearForm').addEventListener('click', clearForm);
+});
+</script>
+</body>
+</html>
