@@ -18,8 +18,8 @@ body { background:var(--bg); color:var(--text); transition:.2s; font-family:sans
 <div id="formPage" class="bg-card card-shadow p-6 rounded-xl w-full max-w-md">
   <h2 class="text-2xl font-semibold mb-4 text-center">Request Service</h2>
   <p class="text-sm text-slate-500 mb-2">
-  <b>Fill this form for selected service</b> <b id="selectedService"></b>
-</p>
+    <b>Fill this form for selected service:</b> <b id="selectedService"></b>
+  </p>
 
   <form id="requestForm" class="space-y-3">
     <input required id="r_name" class="w-full p-2 border rounded" placeholder="Your Name">
@@ -31,7 +31,6 @@ body { background:var(--bg); color:var(--text); transition:.2s; font-family:sans
   </form>
 </div>
 
-<!-- Thank you & Contact -->
 <div id="successPage" class="hidden bg-card card-shadow p-6 rounded-xl w-full max-w-md text-center">
   <h2 class="text-2xl font-semibold mb-2 text-green-600">Request Submitted ✔</h2>
   <p class="text-slate-500 mb-4">We will contact you shortly. Meanwhile, you can contact us directly:</p>
@@ -47,26 +46,36 @@ body { background:var(--bg); color:var(--text); transition:.2s; font-family:sans
 </div>
 
 <script>
+// === CONFIGURATION ===
+// Google Sheet / Form URL (yaha tum apna Google Form ka "POST" URL daaloge)
+const GOOGLE_SHEET_URL = "https://docs.google.com/forms/u/0/d/e/1FAIpQLScSgQ2Qw_xwgSJ1Jj1U76ln8_KJYFphmMYYoim5_wYoor53EA/formResponse"; 
+
 const STORAGE_KEY = "service_requests_v1";
 
-// helper
 function qsGet(name){
   const url = new URL(location.href);
   return url.searchParams.get(name);
 }
 
+// Save locally in localStorage (backup ke liye)
 function saveRequest(data){
   const list = JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
   list.unshift(data);
   localStorage.setItem(STORAGE_KEY, JSON.stringify(list));
 }
 
-function escapeHtml(s=''){ return String(s).replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;'); }
+// Escape HTML injection
+function escapeHtml(s=''){ 
+  return String(s).replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;'); 
+}
 
 document.addEventListener('DOMContentLoaded', ()=>{
-  // prefill service if provided in query
+  // Pre-fill service if provided in query
   const pre = qsGet('service');
-  if(pre) document.getElementById('r_service').value = decodeURIComponent(pre);
+  if(pre) {
+    document.getElementById('r_service').value = decodeURIComponent(pre);
+    document.getElementById('selectedService').innerText = decodeURIComponent(pre);
+  }
 
   const form = document.getElementById("requestForm");
   form.addEventListener("submit", e => {
@@ -81,19 +90,29 @@ document.addEventListener('DOMContentLoaded', ()=>{
       date: new Date().toLocaleString()
     };
 
-    saveRequest(req);
+    saveRequest(req); // localStorage me save
+
+    // === Google Sheets Integration ===
+    // Note: Tumhe Google Form ke input names check karne honge (entry.xxxxx)
+    const formData = new FormData();
+    formData.append("entry.1704972737", req.name);
+    formData.append("entry.1430795574", req.email);
+    formData.append("entry.107083425", req.phone);
+    formData.append("entry.1704585229", req.service);
+    formData.append("entry.835843381", req.details);
+
+    fetch(GOOGLE_SHEET_URL, { method: "POST", mode: "no-cors", body: formData })
+      .then(()=> console.log("Submitted to Google Sheets"));
 
     // Show success page
     document.getElementById("formPage").classList.add("hidden");
     document.getElementById("successPage").classList.remove("hidden");
 
-    // Contact icons dynamic — replace with your contact details
     const MY_EMAIL = "your@email.com";
     const MY_WHATSAPP = "91XXXXXXXXXX"; // with country code
-    document.getElementById("emailBtn").href = `mailto:${MY_EMAIL}?subject=Service Request: ${encodeURIComponent(req.service)}&body=${encodeURIComponent('Name: '+req.name+'%0AEmail: '+req.email+'%0APhone: '+req.phone+'%0ADetails: '+req.details)}`;
+    document.getElementById("emailBtn").href = `mailto:${MY_EMAIL}?subject=Service Request: ${encodeURIComponent(req.service)}&body=${encodeURIComponent('Name: '+req.name+'\nEmail: '+req.email+'\nPhone: '+req.phone+'\nDetails: '+req.details)}`;
     document.getElementById("waBtn").href = `https://wa.me/${MY_WHATSAPP.replace(/\D/g,'')}?text=${encodeURIComponent('Hello, I submitted a request for: '+req.service+' (Name: '+req.name+')')}`;
 
-    // Back to home link
     document.getElementById('backHome').addEventListener('click', ()=>{ window.location.href = 'index.html'; });
   });
 });
