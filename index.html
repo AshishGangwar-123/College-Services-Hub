@@ -184,11 +184,11 @@ function ensureSeed(){
   services=loadFromStorage();
   if(services.length===0){
     services=[
-      {id:genId(),name:'Placement Counselling',short:'Personalized guidance for campus placements',desc:'Resume review, mock interviews, strategy & training.',price:'Free / Paid',tags:['placement','counselling']},
-      {id:genId(),name:'Mini Project Help',short:'Ideas + Submission ready code',desc:'Project ideas, diagrams, code and full documentation.',price:'Depends',tags:['project','code']},
+      {id:genId(),name:'Placement Counselling',short:'Personalized guidance for campus placements',desc:'Resume review, mock interviews, strategy & training.',price:'₹49',tags:['placement','counselling']},
+      {id:genId(),name:'Mini Project Help',short:'Ideas + Submission ready code',desc:'Project ideas, diagrams, code and full documentation.',price:'₹599-₹2499',tags:['project','code']},
       {id:genId(),name:'Resume Making',short:'Professional ATS-friendly resume',desc:'Resume + LinkedIn redesign, PDF export.',price:'₹199',tags:['resume','cv']},
-      {id:genId(),name:'Portfolio Website',short:'Modern & stylish portfolio website to showcase skills & projects',desc:'Responsive portfolio with contact links, projects, certificates.',price:'₹499',tags:['portfolio','web']},
-      {id:genId(),name:'Internship Finder',short:'Paid & unpaid internships across fields for students & freshers',desc:'Curated internship listings and application help.',price:'Free/Paid',tags:['internship','opportunity']}
+      {id:genId(),name:'Portfolio Website',short:'Modern portfolio website to showcase skills & projects',desc:'Responsive portfolio with contact links, projects, certificates.',price:'₹499',tags:['portfolio','web']},
+      {id:genId(),name:'Internship Finder',short:'Paid & unpaid internships across fields for students & freshers',desc:'Curated internship listings and application help.',price:'Freely',tags:['internship','opportunity']}
     ];
     saveToStorage();
   }
